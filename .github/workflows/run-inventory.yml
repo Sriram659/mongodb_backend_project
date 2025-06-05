@@ -24,5 +24,9 @@ jobs:
     - name: Create .env file from GitHub Secret
       run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
 
-    - name: Run Inventory Script
-      run: python main.py
+    - name: Run Inventory Script with .env loaded
+      run: |
+        set -a
+        source .env
+        set +a
+        python main.py
