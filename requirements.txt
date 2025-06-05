@@ -1,5 +1,4 @@
+python-dotenv
 pymongo
 pandas
 openpyxl
-pip install python-dotenv
-pathlib
