@@ -1,7 +1,7 @@
 name: Run Inventory Script
 
 on:
-  workflow_dispatch:  # Allows you to manually trigger it
+  workflow_dispatch:
 
 jobs:
   run:
@@ -22,7 +22,8 @@ jobs:
         pip install -r requirements.txt
 
     - name: Create .env file from GitHub Secret
-      run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+      run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" > mongodb_backend_project/.env
 
     - name: Run Inventory Script
+      working-directory: mongodb_backend_project
       run: python main.py
