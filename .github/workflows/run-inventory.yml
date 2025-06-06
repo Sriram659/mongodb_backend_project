@@ -6,6 +6,7 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    # Only one working directory setting here
     defaults:
       run:
         working-directory: mongodb_backend_project
