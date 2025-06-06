@@ -22,7 +22,10 @@ jobs:
         pip install -r requirements.txt
 
     - name: Create .env file from GitHub Secret
-      run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI }}
+      run: |
+        echo "MONGO_URI=${MONGO_URI}" > .env
 
     - name: Debug .env file content
       run: |
