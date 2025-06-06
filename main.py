@@ -70,44 +70,71 @@ def export_low_stock_to_excel(filename="low_stock.xlsx", threshold=10):
 
 # --- Main Menu ---
 if __name__ == "__main__": 
-    while True:
-        print("1. Import data from excel to db")
-        print("2. Show low stock products (with optional type/brand/category filters)")
-        print("3. Export low stock products to Excel")
-        print("4. Exit")
-
-        choice = input("Choose an option: ")
-
-        if choice == '1':
-            records = read_excel_inventory("inventory.xlsx")
-            insert_data_to_db(records)
-            
-        elif choice == '2':
-            filter_type = input("Enter product type (or press Enter to skip): ").strip() or None
-            filter_brand = input("Enter brand (or press Enter to skip): ").strip() or None
-            filter_category = input("Enter category (or press Enter to skip): ").strip() or None
-
-
-            low_stock_items = get_low_stock_products(
-                threshold=10,
-                filter_type=filter_type,
-                filter_brand=filter_brand,
-                filter_category=filter_category
-            )
-
-            if not low_stock_items:
-                print("No matching low stock items.")
-            else:
-                print("\nLow Stock Products:")
-                for item in low_stock_items:
-                    print(f"- {item['brand']} ({item['type']}), Volume: {item['volume']}, Stock: {item['stock']}, Category: {item['category']}")
+    # Check if running in GitHub Actions (non-interactive environment)
+    if os.getenv('GITHUB_ACTIONS') == 'true':
+        print("Running in GitHub Actions - executing automated tasks...")
         
-        elif choice == '3':
-            export_low_stock_to_excel()
-
-        elif choice == '4':
-            print("Exiting program.")
-            break
-
+        # Option 1: Import data from Excel to DB
+        print("1. Importing data from Excel...")
+        records = read_excel_inventory("inventory.xlsx")
+        insert_data_to_db(records)
+        
+        # Option 2: Show low stock products (without filters)
+        print("2. Checking low stock products...")
+        low_stock_items = get_low_stock_products(threshold=10)
+        
+        if not low_stock_items:
+            print("No low stock items found.")
         else:
-            print("Invalid option. Please try again.")
+            print(f"\nFound {len(low_stock_items)} low stock products:")
+            for item in low_stock_items:
+                print(f"- {item['brand']} ({item['type']}), Volume: {item['volume']}, Stock: {item['stock']}, Category: {item['category']}")
+        
+        # Option 3: Export low stock to Excel
+        print("3. Exporting low stock products to Excel...")
+        export_low_stock_to_excel()
+        
+        print("GitHub Actions tasks completed successfully!")
+        
+    else:
+        # Interactive mode for local development
+        while True:
+            print("1. Import data from excel to db")
+            print("2. Show low stock products (with optional type/brand/category filters)")
+            print("3. Export low stock products to Excel")
+            print("4. Exit")
+
+            choice = input("Choose an option: ")
+
+            if choice == '1':
+                records = read_excel_inventory("inventory.xlsx")
+                insert_data_to_db(records)
+                
+            elif choice == '2':
+                filter_type = input("Enter product type (or press Enter to skip): ").strip() or None
+                filter_brand = input("Enter brand (or press Enter to skip): ").strip() or None
+                filter_category = input("Enter category (or press Enter to skip): ").strip() or None
+
+                low_stock_items = get_low_stock_products(
+                    threshold=10,
+                    filter_type=filter_type,
+                    filter_brand=filter_brand,
+                    filter_category=filter_category
+                )
+
+                if not low_stock_items:
+                    print("No matching low stock items.")
+                else:
+                    print("\nLow Stock Products:")
+                    for item in low_stock_items:
+                        print(f"- {item['brand']} ({item['type']}), Volume: {item['volume']}, Stock: {item['stock']}, Category: {item['category']}")
+            
+            elif choice == '3':
+                export_low_stock_to_excel()
+
+            elif choice == '4':
+                print("Exiting program.")
+                break
+
+            else:
+                print("Invalid option. Please try again.")
