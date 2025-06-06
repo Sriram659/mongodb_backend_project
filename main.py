@@ -1,11 +1,14 @@
 from pymongo import MongoClient
 from dotenv import load_dotenv
 import pandas as pd
+from pathlib import Path
 import openpyxl
 import os
 
 # MongoDB connection
-load_dotenv()
+repo_root = Path(__file__).parent
+dotenv_path = repo_root / ".env"
+load_dotenv(dotenv_path)
 connection_string = os.getenv("MONGO_URI")
 client = MongoClient(connection_string)
 db = client["mini_marche"]
