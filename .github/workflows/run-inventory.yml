@@ -24,8 +24,12 @@ jobs:
     - name: Create .env file from GitHub Secret
       run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
 
-    - name: Debug .env file (optional)
-      run: cat .env
+    - name: Debug .env file content
+      run: |
+        echo "=== .env file contents ==="
+        cat .env
+        echo "=== Check if MONGO_URI starts with mongodb ==="
+        grep "^MONGO_URI=mongodb" .env || echo "ERROR: MONGO_URI doesn't start with mongodb://"
 
     - name: Run Inventory Script
       run: python main.py
