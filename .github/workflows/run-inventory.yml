@@ -6,6 +6,9 @@ on:
 jobs:
   run:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mongodb_backend_project
 
     steps:
     - name: Checkout Code
@@ -22,8 +25,10 @@ jobs:
         pip install -r requirements.txt
 
     - name: Create .env file from GitHub Secret
-      run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" > mongodb_backend_project/.env
+      run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
+
+    - name: Debug .env file (optional)
+      run: cat .env
 
     - name: Run Inventory Script
-      working-directory: mongodb_backend_project
       run: python main.py
