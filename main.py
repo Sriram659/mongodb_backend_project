@@ -5,12 +5,10 @@ from pathlib import Path
 import openpyxl
 import os
 
-# MongoDB connection
 repo_root = Path(__file__).parent
 dotenv_path = repo_root / ".env"
 load_dotenv(dotenv_path)
 connection_string = os.getenv("MONGO_URI")
-print("Loaded MONGO_URI:", os.getenv("MONGO_URI"))
 client = MongoClient(connection_string)
 db = client["mini_marche"]
 collection = db["inventory"]
